@@ -356,16 +356,38 @@ elf_read_uleb128(Elf_Data *data, GElf_Xword offset, uint64_t *retp)
 	return elf_read_next_uleb128(data, &offset, retp);
 }
 
+inline size_t maxst(size_t a, size_t b) {
+    return a < b ? b : a;
+}
+
 int
 ltelf_init(struct ltelf *lte, const char *filename)
 {
 	memset(lte, 0, sizeof *lte);
-	lte->fd = open(filename, O_RDONLY);
-	if (lte->fd == -1) {
-		fprintf(stderr, "Can't open %s: %s\n", filename,
-			strerror(errno));
-		return 1;
-	}
+
+    char *paths[] = { strdup(getenv("LD_LIBRARY_PATH")), strdup(getenv("PATH")) };
+    size_t len = strlen(filename) + maxst(strlen(paths[0]), strlen(paths[1])) + 2;
+    char fullpath[len];
+
+    lte->fd = open(filename, O_RDONLY);
+    int errno_first = errno;
+    size_t i;
+    for (i = 0; i < sizeof(paths)/sizeof(*paths); i++) {
+        char *path = strtok(paths[i], ":");
+        while (path != NULL && lte->fd == -1) {
+            strcpy(stpcpy(stpcpy(fullpath, path), "/"), filename);
+            lte->fd = open(fullpath, O_RDONLY);
+
+            path = strtok(NULL, ":");
+        }
+        free(paths[i]);
+    }
+
+    if (lte->fd == -1) {
+        fprintf(stderr, "Can't open %s: %s\n", filename,
+            strerror(errno_first));
+        return 1;
+    }
 
 	elf_version(EV_CURRENT);
 
