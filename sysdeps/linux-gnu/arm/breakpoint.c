@@ -30,6 +30,8 @@
 #include "debug.h"
 #include "proc.h"
 
+#define SIZEOF_LONG sizeof(long)
+
 void
 arch_enable_breakpoint(pid_t pid, struct breakpoint *sbp)
 {

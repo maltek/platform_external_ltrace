@@ -53,6 +53,12 @@
  * have a bit delay
  */
 
+enum {
+    RT_CONSISTENT,
+    RT_ADD,
+    RT_DELETE
+};
+
 #define	MAX_DELAY	100000	/* 100000 microseconds = 0.1 seconds */
 
 #define PROC_PID_FILE(VAR, FORMAT, PID)		\

@@ -21,7 +21,9 @@
  * 02110-1301 USA
  */
 
+#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* For wcwidth from wchar.h.  */
+#endif
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -31,6 +33,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
+#include <search.h>
 
 #include "bits.h"
 #include "expr.h"

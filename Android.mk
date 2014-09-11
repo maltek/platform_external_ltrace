@@ -65,7 +65,9 @@ LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/sysdeps/linux-gnu \
     external/elfutils \
     external/elfutils/0.153/libelf \
+    external/elfutils/libelf \
     external/libunwind/include \
+    $(LOCAL_PATH)/sysdeps/linux-gnu/$(arch) \
 
 arm_path := sysdeps/linux-gnu/arm
 LOCAL_C_INCLUDES_arm := $(LOCAL_PATH)/$(arm_path)
@@ -102,6 +104,10 @@ LOCAL_SRC_FILES_x86 := \
 # x86_64 uses the same source as x86.
 LOCAL_C_INCLUDES_x86_64 := $(LOCAL_C_INCLUDES_x86)
 LOCAL_SRC_FILES_x86_64 := $(LOCAL_SRC_FILES_x86)
+
+LOCAL_C_INCLUDES += $(LOCAL_C_INCLUDES_$(arch))
+
+LOCAL_SRC_FILES += $(LOCAL_SRC_FILES_$(arch))
 
 LOCAL_CFLAGS := -D_GNU_SOURCE=1 -D_POSIX_SOURCE=1
 
@@ -163,6 +169,8 @@ LOCAL_CFLAGS += \
     -DPKGDATADIR=NULL \
     -DSYSCONFDIR='"/etc/"' \
     -Drindex=strrchr \
+    -D_XOPEN_SOURCE=700 \
+    -D_POSIX_C_SOURCE=199506L \
 
 LOCAL_CFLAGS_32 += -DSIZEOF_LONG=4
 LOCAL_CFLAGS_64 += -DSIZEOF_LONG=8

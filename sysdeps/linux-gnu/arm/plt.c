@@ -28,6 +28,8 @@
 #include "library.h"
 #include "ltrace-elf.h"
 
+#define SHT_ARM_ATTRIBUTES 0x70000003U
+
 static int
 get_hardfp(uint64_t abi_vfp_args)
 {
